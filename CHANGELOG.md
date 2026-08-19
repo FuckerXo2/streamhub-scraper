@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-08-19
+
+### Added
+- **7 new providers ported from the Infinite-streams v5.0.0 Stremio addon** (CommonJS ports, registered in `providers/registry.js`):
+  - `streamflix` - StreamFlix direct MP4 links (30-min `data.json` cache + Firebase episode lookup).
+  - `vaplayer` - VaPlayer HLS streams resolved by IMDb ID.
+  - `castletv` - CastleTV streams via AES-128-CBC encrypted API (`api.hlowb.com`), per-track + shared fallback, subtitle support.
+  - `hdghartv` - HDGharTV title search with fuzzy match + IMDb ID verification, quality-sorted links.
+  - `netmirror` - Netflix direct (embed-tmdb) plus NewTV platform fallback (Netflix/Prime Video/Hotstar/Disney) with rotating discovery domains.
+  - `onetouchtv` - OneTouchTV streams via AES-256-CBC custom-base64 API (title/season matching + IMDb verification + absolute-episode resolution).
+  - `zxcstreams` - ZXCStreams multi-server backend (icarus/berkas/orion/athena) with dynamic domain discovery and shared-token flow.
+- **New shared utilities**: `utils/titleMatch.js` (fuzzy title matching port), `utils/tmdbTitleToImdb.js` (TMDB title→IMDb resolution with cache), `utils/cinemetaEpisodes.js` (episode counts per season).
+- **`utils/tmdb.js` fixed**: now reads the TMDB API key via `utils/tmdbKey` (normalized `tmdbApiKeys`) instead of the deleted legacy `config.tmdbApiKey` field, so `getDetails`/`resolveImdbId` work with the current config schema.
+
+### Fixed
+- **Vidlink provider**: Rewritten for the new API format — parses `stream.qualities` into one stream per quality (best-first), no longer relies on the removed HLS proxy format. Requires a working CDN (some CDNs 429 server-side requests from blocked IPs; browsers play direct URLs fine).
+
+---
+
+## [1.2.0] - 2026-08-19
+
+### Removed
+- **LordFlix provider**: Permanently removed — upstream API `snowhouse.lordflix.club` (and `lordflix.org`) no longer resolves in DNS. `enc-dec.app` is a passthrough signer and returns signed URLs for the dead host; no compatible successor API exists (`lordflix.gd` / `lordflix.app` are unrelated clones using TMDB-ID + iframe embeds, not the snowhouse API).
+- **NoTorrent provider**: Permanently removed — taken down by its developer; the Stremio addon API bridge (`addon-osvh.onrender.com`) is no longer available.
+
+---
+
 ## [1.1.1] - 2026-05-29
 
 ### Removed
