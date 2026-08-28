@@ -4,6 +4,7 @@ const { URL } = require('url');
 const cheerio = require('cheerio');
 const fs = require('fs').promises;
 const path = require('path');
+const { httpAgent, httpsAgent, isProxyEnabled } = require('../utils/proxy');
 
 // Configuration
 const DOMAINS_URL = 'https://raw.githubusercontent.com/phisher98/TVVVV/refs/heads/main/domains.json';
@@ -91,7 +92,8 @@ function validateUrl(url) {
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                     ...extraHeaders
-                }
+                },
+                agent: urlObj.protocol === 'https:' ? httpsAgent : httpAgent
             };
 
             const req = protocol.request(url, options, (res) => {
@@ -141,7 +143,8 @@ function makeRequest(url, options = {}) {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
                     ...options.headers
                 },
-                timeout: 30000
+                timeout: 30000,
+                agent: isHttps ? httpsAgent : httpAgent
             };
 
             const req = httpModule.request(requestOptions, (res) => {
