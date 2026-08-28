@@ -12,17 +12,20 @@ const PROXY_URL = process.env.PROXY_URL;
 let httpAgent = null;
 let httpsAgent = null;
 
+console.log('[Proxy] Initializing proxy configuration...');
+console.log(`[Proxy] PROXY_URL from env: ${PROXY_URL || 'NOT SET'}`);
+
 if (PROXY_URL) {
-    console.log(`[Proxy] Configuring proxy: ${PROXY_URL}`);
+    console.log(`[Proxy] ✅ Configuring proxy: ${PROXY_URL}`);
     try {
         httpAgent = new HttpProxyAgent(PROXY_URL);
         httpsAgent = new HttpsProxyAgent(PROXY_URL);
-        console.log('[Proxy] Proxy agents created successfully');
+        console.log('[Proxy] ✅ Proxy agents created successfully');
     } catch (error) {
-        console.error(`[Proxy] Failed to create proxy agents: ${error.message}`);
+        console.error(`[Proxy] ❌ Failed to create proxy agents: ${error.message}`);
     }
 } else {
-    console.log('[Proxy] No PROXY_URL configured, using direct connection');
+    console.log('[Proxy] ⚠️ No PROXY_URL configured, using direct connection');
 }
 
 module.exports = {
