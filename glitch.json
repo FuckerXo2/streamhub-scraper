@@ -1,0 +1,12 @@
+{
+  "install": "npm install",
+  "start": "node apiServer.js",
+  "watch": {
+    "restart": {
+      "include": [
+        "**/*.js",
+        "**/*.json"
+      ]
+    }
+  }
+}

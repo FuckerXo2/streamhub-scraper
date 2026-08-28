@@ -1,7 +1,7 @@
 {
   "defaultProviders": [],
   "configVersion": 1,
-  "tmdbApiKeys": [],
+  "tmdbApiKeys": ["f232905717c9bcd87ccf959257d57960"],
   "enableShowboxProvider": true,
   "febboxCookies": [],
   "enable4khdhubProvider": true,
