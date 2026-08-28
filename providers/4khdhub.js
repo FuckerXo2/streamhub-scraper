@@ -4,7 +4,18 @@ const { URL } = require('url');
 const cheerio = require('cheerio');
 const fs = require('fs').promises;
 const path = require('path');
-const { httpAgent, httpsAgent, isProxyEnabled } = require('../utils/proxy');
+
+let httpAgent = null;
+let httpsAgent = null;
+try {
+    const proxyModule = require('../utils/proxy');
+    httpAgent = proxyModule.httpAgent;
+    httpsAgent = proxyModule.httpsAgent;
+    console.log('[4KHDHub] Proxy module loaded successfully');
+} catch (error) {
+    console.error(`[4KHDHub] Failed to load proxy module: ${error.message}`);
+    console.error('[4KHDHub] Continuing without proxy support');
+}
 
 // Configuration
 const DOMAINS_URL = 'https://raw.githubusercontent.com/phisher98/TVVVV/refs/heads/main/domains.json';
