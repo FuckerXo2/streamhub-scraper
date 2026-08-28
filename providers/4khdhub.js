@@ -97,15 +97,22 @@ function validateUrl(url) {
                 console.log(`[4KHDHub] Adding Referer/Origin headers for validation of r2.dev URL: ${url}`);
             }
 
+            // Only use proxy for 4KHDHub domains, not for TMDB API or other services
+            const shouldUseProxy = urlObj.hostname.includes('4khdhub') || urlObj.hostname.includes('4khdtv');
+            
             const options = {
                 method: 'HEAD',
                 timeout: 15000,
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                     ...extraHeaders
-                },
-                agent: urlObj.protocol === 'https:' ? httpsAgent : httpAgent
+                }
             };
+            
+            // Add proxy agent only if targeting 4KHDHub
+            if (shouldUseProxy) {
+                options.agent = urlObj.protocol === 'https:' ? httpsAgent : httpAgent;
+            }
 
             const req = protocol.request(url, options, (res) => {
                 // Consider 2xx and 3xx status codes as valid, including 206 (Partial Content)
@@ -145,6 +152,9 @@ function makeRequest(url, options = {}) {
             const isHttps = urlObj.protocol === 'https:';
             const httpModule = isHttps ? https : http;
 
+            // Only use proxy for 4KHDHub domains
+            const shouldUseProxy = urlObj.hostname.includes('4khdhub') || urlObj.hostname.includes('4khdtv');
+
             const requestOptions = {
                 hostname: urlObj.hostname,
                 port: urlObj.port || (isHttps ? 443 : 80),
@@ -154,9 +164,13 @@ function makeRequest(url, options = {}) {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
                     ...options.headers
                 },
-                timeout: 30000,
-                agent: isHttps ? httpsAgent : httpAgent
+                timeout: 30000
             };
+            
+            // Add proxy agent only if targeting 4KHDHub
+            if (shouldUseProxy) {
+                requestOptions.agent = isHttps ? httpsAgent : httpAgent;
+            }
 
             const req = httpModule.request(requestOptions, (res) => {
                 const redirectCodes = [301, 302, 303, 307, 308];
